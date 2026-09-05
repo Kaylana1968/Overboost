@@ -1,33 +1,42 @@
 using System.Collections;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
-    private float stepSize;
+    private float StepSize;
 
     [SerializeField]
-    private float jumpPower;
+    private float JumpPower;
 
     [SerializeField]
-    private float jumpDuration;
+    private float JumpDuration;
 
     private Vector3 _initialPosition;
     private int _currentSquare;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public Stat PlayerStat;
+    public UnityEvent OnStartTurn;
+    public UnityEvent OnEndTurn;
+
+    void Awake()
+    {
+        OnStartTurn = new();
+        OnEndTurn = new();
+    }
+
     void Start()
     {
         _currentSquare = 1;
         _initialPosition = transform.position;
     }
 
-    // Update is called once per frame
     void Update()
     {
-
+        print(PlayerStat.Speed);
     }
 
     public void OnWait(InputValue ctx)
@@ -37,19 +46,19 @@ public class PlayerController : MonoBehaviour
 
     public void OnWalk(InputValue ctx)
     {
-        StartCoroutine(MoveBy(1));
+        StartCoroutine(MoveBy(PlayerStat.Speed));
     }
 
     public IEnumerator MoveBy(int squares)
     {
-        Vector3 targetPosition = new(_initialPosition.x + stepSize * _currentSquare, _initialPosition.y, _initialPosition.z);
         transform.DOComplete();
         for (int i = 0; i < squares; i++)
         {
-            transform.DOJump(targetPosition, jumpPower, 1, jumpDuration);
+            Vector3 targetPosition = new(_initialPosition.x + StepSize * _currentSquare, _initialPosition.y, _initialPosition.z);
+            transform.DOJump(targetPosition, JumpPower, 1, JumpDuration);
             _currentSquare++;
 
-            yield return new WaitForSeconds(jumpDuration);
+            yield return new WaitForSeconds(JumpDuration);
         }
     }
 }

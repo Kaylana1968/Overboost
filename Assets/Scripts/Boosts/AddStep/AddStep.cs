@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class AddStep : MonoBehaviour
 {
@@ -9,11 +8,6 @@ public class AddStep : MonoBehaviour
     void Start()
     {
         _playerController = GetComponent<PlayerController>();
-    }
-
-
-    public void OnWalk(InputValue ctx)
-    {
-        _playerController.OnWalk(ctx);
+        _playerController.PlayerStat.AddBaseValue(1);
     }
 }

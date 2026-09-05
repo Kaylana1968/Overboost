@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: AddStep
   m_EditorClassIdentifier: Assembly-CSharp::Boost
   boostName: Haste
-  description: You move one more square
-  script: {fileID: 0}
+  description: Your default walk speed is incremented by 1
+  script: {fileID: 11500000, guid: c210301113e1e0a4488ab13d796023bc, type: 3}
