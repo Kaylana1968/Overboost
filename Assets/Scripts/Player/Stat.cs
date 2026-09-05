@@ -5,11 +5,11 @@ using UnityEngine;
 [Serializable]
 public class Stat
 {
-    private int _turnCount = 3;
     private int _baseSpeed = 1;
     private readonly List<float> _speedMultipliers = new();
     private readonly List<int> _additionnalSpeed = new();
 
+    public int _turnCount = 3;
     public int Speed
     {
         get

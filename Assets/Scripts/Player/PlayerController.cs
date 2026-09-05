@@ -19,11 +19,15 @@ public class PlayerController : MonoBehaviour
     private int _currentSquare;
 
     public Stat PlayerStat;
+    public UnityEvent OnStartRound;
+    public UnityEvent OnEndRound;
     public UnityEvent OnStartTurn;
     public UnityEvent OnEndTurn;
 
     void Awake()
     {
+        OnStartRound = new();
+        OnEndRound = new();
         OnStartTurn = new();
         OnEndTurn = new();
     }
@@ -32,11 +36,6 @@ public class PlayerController : MonoBehaviour
     {
         _currentSquare = 1;
         _initialPosition = transform.position;
-    }
-
-    void Update()
-    {
-        print(PlayerStat.Speed);
     }
 
     public void OnWait(InputValue ctx)
@@ -60,5 +59,6 @@ public class PlayerController : MonoBehaviour
 
             yield return new WaitForSeconds(JumpDuration);
         }
+        OnEndTurn.Invoke();
     }
 }
