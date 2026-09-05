@@ -4127,6 +4127,7 @@ GameObject:
   - component: {fileID: 633330135}
   - component: {fileID: 633330139}
   - component: {fileID: 633330140}
+  - component: {fileID: 633330141}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -4286,6 +4287,18 @@ MonoBehaviour:
   stepSize: 1.25
   jumpPower: 0.2
   jumpDuration: 0.2
+--- !u!114 &633330141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 633330134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c210301113e1e0a4488ab13d796023bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AddStep
 --- !u!1 &675092313
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,3 +1,4 @@
+using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -36,14 +37,19 @@ public class PlayerController : MonoBehaviour
 
     public void OnWalk(InputValue ctx)
     {
-        WalkOneSquare();
+        StartCoroutine(MoveBy(1));
     }
 
-    public void WalkOneSquare()
+    public IEnumerator MoveBy(int squares)
     {
         Vector3 targetPosition = new(_initialPosition.x + stepSize * _currentSquare, _initialPosition.y, _initialPosition.z);
         transform.DOComplete();
-        transform.DOJump(targetPosition, jumpPower, 1, jumpDuration);
-        _currentSquare++;
+        for (int i = 0; i < squares; i++)
+        {
+            transform.DOJump(targetPosition, jumpPower, 1, jumpDuration);
+            _currentSquare++;
+
+            yield return new WaitForSeconds(jumpDuration);
+        }
     }
 }
