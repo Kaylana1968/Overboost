@@ -19,12 +19,16 @@ public class CardManager : MonoBehaviour
         _button = GetComponent<Button>();
     }
 
-    public void SetCard(Boost boost, PlayerController player)
+    public void SetCard(Boost boost, PlayerController player, Canvas canvas)
     {
         image.texture = boost.Image;
         title.text = boost.BoostName;
         description.text = boost.Description;
         _button.onClick.RemoveAllListeners();
-        // _button.onClick.AddListener(() => );
+        _button.onClick.AddListener(() =>
+        {
+            canvas.enabled = false;
+            GameManager.Instance.GoOnNextRound();
+        });
     }
 }

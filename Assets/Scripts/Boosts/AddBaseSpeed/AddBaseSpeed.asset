@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Boost
   BoostName: Haste
   Description: Increase your base speed by 1
+  Image: {fileID: 2800000, guid: 57a02cd19eaf0344f9778e8eb18aa864, type: 3}
   Script: {fileID: 11500000, guid: c210301113e1e0a4488ab13d796023bc, type: 3}
