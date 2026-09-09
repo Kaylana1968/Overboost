@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
 
     private int _activePlayerIndex;
     private int _currentTurn;
+    private bool _canMove;
 
     void Awake()
     {
@@ -37,11 +38,16 @@ public class GameManager : MonoBehaviour
 
         foreach (PlayerController player in Players)
         {
-            player.OnStartRound.AddListener(() => _currentTurn = 1);
+            player.OnStartRound.AddListener(() =>
+            {
+                _currentTurn = 1;
+                _canMove = true;
+            });
             player.OnEndTurn.AddListener(() =>
             {
                 if (_currentTurn >= Players[_activePlayerIndex].PlayerStat._turnCount)
                 {
+                    _canMove = false;
                     player.OnEndRound.Invoke();
                     BoostScreen.enabled = true;
                 }
@@ -56,11 +62,13 @@ public class GameManager : MonoBehaviour
 
     public void OnWalk(InputValue ctx)
     {
+        if (!_canMove) return;
         Players[_activePlayerIndex].Walk();
     }
 
     public void OnWait(InputValue ctx)
     {
+        if (!_canMove) return;
         Players[_activePlayerIndex].Wait();
     }
 

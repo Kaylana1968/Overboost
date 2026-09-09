@@ -2088,6 +2088,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   Offset: -0.9
+  Smoothing: 0.1
   Players:
   - {fileID: 633330140}
   - {fileID: 583715378}
@@ -4147,7 +4148,6 @@ GameObject:
   - component: {fileID: 583715381}
   - component: {fileID: 583715380}
   - component: {fileID: 583715378}
-  - component: {fileID: 583715377}
   m_Layer: 0
   m_Name: Player 2
   m_TagString: Untagged
@@ -4155,18 +4155,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &583715377
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 583715376}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c210301113e1e0a4488ab13d796023bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AddStep
 --- !u!114 &583715378
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4244,7 +4232,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 41e5eff055ee8b440adea285c1a437c3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4285,7 +4273,7 @@ Transform:
   m_GameObject: {fileID: 583715376}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.65, z: 0}
+  m_LocalPosition: {x: 0, y: 0.65, z: -0.1}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4889,7 +4877,6 @@ GameObject:
   - component: {fileID: 633330136}
   - component: {fileID: 633330135}
   - component: {fileID: 633330140}
-  - component: {fileID: 633330141}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -4945,7 +4932,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: b239c6d15f656b94eaf9f3a8e4a72054, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4986,7 +4973,7 @@ Transform:
   m_GameObject: {fileID: 633330134}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.65, z: 0}
+  m_LocalPosition: {x: 0, y: 0.65, z: 0.1}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5021,18 +5008,6 @@ MonoBehaviour:
   OnEndTurn:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &633330141
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 633330134}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c210301113e1e0a4488ab13d796023bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AddStep
 --- !u!1 &657750889
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,6 +7,9 @@ public class CameraController : MonoBehaviour
     private float Offset;
 
     [SerializeField]
+    private float Smoothing;
+
+    [SerializeField]
     private List<PlayerController> Players;
 
     private Transform ActivePlayer;
@@ -21,6 +24,7 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        transform.position = new(ActivePlayer.position.x + Offset, transform.position.y, transform.position.z);
+        Vector3 targetPosition = new(ActivePlayer.position.x + Offset, transform.position.y, transform.position.z);
+        transform.position = Vector3.Lerp(transform.position, targetPosition, Smoothing);
     }
 }
