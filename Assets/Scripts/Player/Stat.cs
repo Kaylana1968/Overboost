@@ -7,7 +7,7 @@ public class Stat
 {
     private int _baseSpeed = 1;
     private readonly List<float> _speedMultipliers = new();
-    private readonly List<int> _additionnalSpeed = new();
+    private int _additionnalSpeed = 0;
 
     public int _turnCount = 3;
     public int Speed
@@ -19,13 +19,13 @@ public class Stat
             {
                 finalValue = Mathf.FloorToInt(finalValue * mult);
             }
+            finalValue += _additionnalSpeed;
             return finalValue;
         }
     }
 
-    public void AddBaseValue(int count) => _baseSpeed += count;
+    public void AddBaseValue(int value) => _baseSpeed += value;
     public void AddMultiplier(float multiplier) => _speedMultipliers.Add(multiplier);
     public void RemoveMultiplier(float multiplier) => _speedMultipliers.Remove(multiplier);
-    public void AddAdditionnalValue(int value) => _additionnalSpeed.Add(value);
-    public void RemoveAdditionnalValue(int value) => _additionnalSpeed.Remove(value);
+    public void AddAdditionnalValue(int value) => _additionnalSpeed += value;
 }

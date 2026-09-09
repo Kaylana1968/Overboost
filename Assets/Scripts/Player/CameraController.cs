@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -5,7 +6,18 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private float Offset;
 
-    public Transform ActivePlayer;
+    [SerializeField]
+    private List<PlayerController> Players;
+
+    private Transform ActivePlayer;
+
+    void Start()
+    {
+        foreach (PlayerController player in Players)
+        {
+            player.OnStartRound.AddListener(() => ActivePlayer = player.transform);
+        }
+    }
 
     void Update()
     {

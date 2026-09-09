@@ -6,5 +6,6 @@ public class Boost : ScriptableObject
 {
     public string BoostName;
     public string Description;
+    public Texture2D Image;
     public MonoScript Script;
 }

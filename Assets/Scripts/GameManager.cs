@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -7,6 +8,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private List<PlayerController> Players;
+    [SerializeField]
+    private Canvas BoostScreen;
 
     private int _activePlayerIndex;
     private int _currentTurn;
@@ -30,22 +33,17 @@ public class GameManager : MonoBehaviour
         }
 
         _activePlayerIndex = 0;
-        PlayerController _activePlayer = Players[_activePlayerIndex];
+        PlayerController activePlayer = Players[_activePlayerIndex];
 
-        foreach (PlayerController _player in Players)
+        foreach (PlayerController player in Players)
         {
-            _player.OnStartRound.AddListener(() => _currentTurn = 1);
-            _player.OnEndRound.AddListener(() =>
-            {
-                _activePlayerIndex = (_activePlayerIndex + 1) % Players.Count;
-                Players[_activePlayerIndex].OnStartRound.Invoke();
-
-            });
-            _player.OnEndTurn.AddListener(() =>
+            player.OnStartRound.AddListener(() => _currentTurn = 1);
+            player.OnEndTurn.AddListener(() =>
             {
                 if (_currentTurn >= Players[_activePlayerIndex].PlayerStat._turnCount)
                 {
-                    _player.OnEndRound.Invoke();
+                    player.OnEndRound.Invoke();
+                    BoostScreen.enabled = true;
                 }
                 else
                 {
@@ -53,6 +51,22 @@ public class GameManager : MonoBehaviour
                 }
             });
         }
-        _activePlayer.OnStartRound.Invoke();
+        activePlayer.OnStartRound.Invoke();
+    }
+
+    public void OnWalk(InputValue ctx)
+    {
+        Players[_activePlayerIndex].Walk();
+    }
+
+    public void OnWait(InputValue ctx)
+    {
+        Players[_activePlayerIndex].Wait();
+    }
+
+    public void GoOnNextRound()
+    {
+        _activePlayerIndex = (_activePlayerIndex + 1) % Players.Count;
+        Players[_activePlayerIndex].OnStartRound.Invoke();
     }
 }

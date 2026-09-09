@@ -38,17 +38,18 @@ public class PlayerController : MonoBehaviour
         _initialPosition = transform.position;
     }
 
-    public void OnWait(InputValue ctx)
+    public void Wait()
     {
         print("ZZZ");
+        OnEndTurn.Invoke();
     }
 
-    public void OnWalk(InputValue ctx)
+    public void Walk()
     {
-        StartCoroutine(MoveBy(PlayerStat.Speed));
+        StartCoroutine(WalkBy(PlayerStat.Speed));
     }
 
-    public IEnumerator MoveBy(int squares)
+    private IEnumerator WalkBy(int squares)
     {
         transform.DOComplete();
         for (int i = 0; i < squares; i++)

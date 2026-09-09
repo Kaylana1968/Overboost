@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c49d461ba41ac34c8880ada9a97c49a, type: 3}
+  m_Name: AddSpeedMultiplier
+  m_EditorClassIdentifier: Assembly-CSharp::Boost
+  BoostName: Turbo
+  Description: Multiply your base speed by 1.5
+  Script: {fileID: 11500000, guid: 429bff4df04da504d83b99dd9d3688a3, type: 3}
