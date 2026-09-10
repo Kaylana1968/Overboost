@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AddAdditionnalSpeed : MonoBehaviour
+public class Haste : MonoBehaviour
 {
     private PlayerController _playerController;
 
@@ -8,6 +8,6 @@ public class AddAdditionnalSpeed : MonoBehaviour
     void Start()
     {
         _playerController = GetComponent<PlayerController>();
-        _playerController.PlayerStat.AddAdditionnalValue(1);
+        _playerController.PlayerStat.AddBaseValue(1);
     }
 }

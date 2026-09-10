@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AddStep : MonoBehaviour
+public class EnergyDrink : MonoBehaviour
 {
     private PlayerController _playerController;
 
@@ -8,6 +8,6 @@ public class AddStep : MonoBehaviour
     void Start()
     {
         _playerController = GetComponent<PlayerController>();
-        _playerController.PlayerStat.AddBaseValue(1);
+        _playerController.PlayerStat.AddAdditionnalValue(1);
     }
 }

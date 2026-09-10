@@ -18,7 +18,7 @@ public class BoostScreenManager : MonoBehaviour
 
         foreach (PlayerController player in Players)
         {
-            player.OnEndRound.AddListener(() => GenerateBoostFor(player));
+            player.OnEndRound.AddListener(() => GenerateBoostFor(player.gameObject));
         }
     }
 
@@ -36,7 +36,7 @@ public class BoostScreenManager : MonoBehaviour
         return tempList.GetRange(0, 3);
     }
 
-    void GenerateBoostFor(PlayerController player)
+    void GenerateBoostFor(GameObject player)
     {
         _canvas.enabled = true;
         

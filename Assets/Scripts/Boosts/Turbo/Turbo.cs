@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AddSpeedMultiplier : MonoBehaviour
+public class Turbo : MonoBehaviour
 {
     private PlayerController _playerController;
 

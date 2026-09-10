@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c49d461ba41ac34c8880ada9a97c49a, type: 3}
-  m_Name: AddSpeedMultiplier
+  m_Name: Turbo
   m_EditorClassIdentifier: Assembly-CSharp::Boost
   BoostName: Turbo
   Description: Multiply your base speed by 1.5
   Image: {fileID: 2800000, guid: c206b42048247b0459c19a9ef642fda6, type: 3}
-  Script: {fileID: 11500000, guid: 429bff4df04da504d83b99dd9d3688a3, type: 3}
+  Prefab: {fileID: 664923885701602860, guid: bd4e54b8731aa314d9d659dd8dac9435, type: 3}

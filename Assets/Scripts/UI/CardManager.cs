@@ -1,5 +1,4 @@
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,7 +18,7 @@ public class CardManager : MonoBehaviour
         _button = GetComponent<Button>();
     }
 
-    public void SetCard(Boost boost, PlayerController player, Canvas canvas)
+    public void SetCard(Boost boost, GameObject player, Canvas canvas)
     {
         image.texture = boost.Image;
         title.text = boost.BoostName;
@@ -28,6 +27,16 @@ public class CardManager : MonoBehaviour
         _button.onClick.AddListener(() =>
         {
             canvas.enabled = false;
+
+            // Instantiate a gameObject that has the script to add to the player
+            GameObject gameObjectWithScript = Instantiate(boost.Prefab);
+            // Get the script
+            MonoBehaviour script = gameObjectWithScript.GetComponent<MonoBehaviour>();
+            // Add a component of the script's type to the player
+            player.AddComponent(script.GetType());
+            // Cleanup the instantiated gameObject
+            Destroy(gameObjectWithScript);
+
             GameManager.Instance.GoOnNextRound();
         });
     }
