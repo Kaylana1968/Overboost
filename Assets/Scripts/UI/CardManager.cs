@@ -27,16 +27,7 @@ public class CardManager : MonoBehaviour
         _button.onClick.AddListener(() =>
         {
             canvas.enabled = false;
-
-            // Instantiate a gameObject that has the script to add to the player
-            GameObject gameObjectWithScript = Instantiate(boost.Prefab);
-            // Get the script
-            MonoBehaviour script = gameObjectWithScript.GetComponent<MonoBehaviour>();
-            // Add a component of the script's type to the player
-            player.AddComponent(script.GetType());
-            // Cleanup the instantiated gameObject
-            Destroy(gameObjectWithScript);
-
+            player.AddComponent(boost.Script.GetType());
             GameManager.Instance.GoOnNextRound();
         });
     }

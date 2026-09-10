@@ -7,5 +7,5 @@ public class Boost : ScriptableObject
     public string BoostName;
     public string Description;
     public Texture2D Image;
-    public GameObject Prefab;
+    public MonoBehaviour Script;
 }
