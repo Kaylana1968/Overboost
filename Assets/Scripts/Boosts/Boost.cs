@@ -1,4 +1,3 @@
-using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Boost", menuName = "Scriptable Objects/Boost")]

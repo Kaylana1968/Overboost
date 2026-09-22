@@ -13,26 +13,16 @@ public class GameManager : MonoBehaviour
 
     private int _activePlayerIndex;
     private int _currentTurn;
+    private int _currentEndTurn;
     private bool _canMove;
 
     void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
         Instance = this;
     }
 
     void Start()
     {
-        if (Players.Count < 2)
-        {
-            return;
-        }
-
         _activePlayerIndex = 0;
         PlayerController activePlayer = Players[_activePlayerIndex];
 
@@ -41,35 +31,50 @@ public class GameManager : MonoBehaviour
             player.OnStartRound.AddListener(() =>
             {
                 _currentTurn = 1;
+                _currentEndTurn = 1;
                 _canMove = true;
             });
             player.OnEndTurn.AddListener(() =>
             {
-                if (_currentTurn >= Players[_activePlayerIndex].PlayerStat._turnCount)
+                if (_currentEndTurn == player.PlayerStat.TurnCount)
                 {
-                    _canMove = false;
                     player.OnEndRound.Invoke();
                     BoostScreen.enabled = true;
                 }
                 else
                 {
-                    _currentTurn++;
+                    _currentEndTurn++;
                 }
             });
         }
         activePlayer.OnStartRound.Invoke();
     }
 
+    private void CheckCanMove()
+    {
+        if (_currentTurn <= Players[_activePlayerIndex].PlayerStat.TurnCount)
+        {
+            return;
+        }
+
+        _canMove = false;
+
+    }
+
     public void OnWalk(InputValue ctx)
     {
         if (!_canMove) return;
         Players[_activePlayerIndex].Walk();
+        _currentTurn++;
+        CheckCanMove();
     }
 
     public void OnWait(InputValue ctx)
     {
         if (!_canMove) return;
         Players[_activePlayerIndex].Wait();
+        _currentTurn++;
+        CheckCanMove();
     }
 
     public void GoOnNextRound()

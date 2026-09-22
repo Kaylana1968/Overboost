@@ -6,16 +6,9 @@ using UnityEngine.Events;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]
-    private float StepSize;
-
-    [SerializeField]
     private float JumpPower;
 
-    [SerializeField]
-    private float JumpDuration;
-
     private Vector3 _initialPosition;
-    private int _currentSquare;
 
     public Stat PlayerStat;
     public UnityEvent OnStartRound;
@@ -33,7 +26,6 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        _currentSquare = 1;
         _initialPosition = transform.position;
     }
 
@@ -53,11 +45,13 @@ public class PlayerController : MonoBehaviour
         transform.DOComplete();
         for (int i = 0; i < squares; i++)
         {
-            Vector3 targetPosition = new(_initialPosition.x + StepSize * _currentSquare, _initialPosition.y, _initialPosition.z);
-            transform.DOJump(targetPosition, JumpPower, 1, JumpDuration);
-            _currentSquare++;
+            Vector3 targetPosition = new(_initialPosition.x + BoardManager.Instance.PlatformSpacing * PlayerStat.CurrentSquare, _initialPosition.y, _initialPosition.z);
+            PlayerStat.CurrentSquare++;
 
-            yield return new WaitForSeconds(JumpDuration);
+            BoardManager.Instance.EnablePlatform(PlayerStat.CurrentSquare);
+            transform.DOJump(targetPosition, JumpPower, 1, BoardManager.Instance.CreationDuration);
+
+            yield return new WaitForSeconds(BoardManager.Instance.CreationDuration);
         }
         OnEndTurn.Invoke();
     }
