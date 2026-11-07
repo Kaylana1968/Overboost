@@ -10,22 +10,28 @@ public struct PlatformData
 {
     public int Number;
     public GameObject GameObject;
+
+    public readonly void SetHeight(float height, float duration)
+    {
+        if (GameObject.transform.position.y == height)
+        {
+            return;
+        }
+
+        GameObject.transform.DOComplete();
+        GameObject.transform.DOMoveY(height, duration);
+    }
 }
 
 public class BoardManager : MonoBehaviour
 {
     public static BoardManager Instance { get; private set; }
     public float PlatformSpacing;
-    public float CreationDuration;
 
     [SerializeField]
     private List<PlayerController> Players;
     [SerializeField]
-    private float SpawnHeight;
-    [SerializeField]
-    private float TargetHeight;
-    [SerializeField]
-    private float NeighborHeight;
+    private List<float> HeightPoints;
     [SerializeField]
     private GameObject Platform;
     [SerializeField]
@@ -36,55 +42,85 @@ public class BoardManager : MonoBehaviour
         Instance = this;
     }
 
-    private bool HasPlayerOnSquare(int number)
+    void Start()
     {
-        return Players.Any(p => p.PlayerStat.CurrentSquare == number);
+        // Initialize platforms
+        EnablePlatform(0, 0f);
     }
 
-    private bool HasPlayerOnOrAroundSquare(int number)
+    private void CreatePlatform(int number, float height)
     {
-        return Players.Any(p =>
+        PlatformData platform = new()
         {
-            int playerSquare = p.PlayerStat.CurrentSquare;
-            return playerSquare >= number - 1 && playerSquare <= number + 1;
-        });
+            Number = number,
+            GameObject = Instantiate(
+                Platform,
+                new Vector3(number * PlatformSpacing, height, 0f),
+                Quaternion.identity,
+                transform
+            )
+        };
+
+        platform.GameObject.GetComponentInChildren<TMP_Text>().SetText((number + 1).ToString());
+        Platforms.Add(platform);
     }
 
-    public void EnablePlatform(int number)
+    private void DestroyPlatform(int number)
     {
         PlatformData platform = Platforms.Find(p => p.Number == number);
-        PlatformData previousPreviousPlatform = Platforms.Find(p => p.Number == number - 2);
-        PlatformData previousPlatform = Platforms.Find(p => p.Number == number - 1);
-        PlatformData nextPlatform = Platforms.Find(p => p.Number == number + 1);
 
-        if (previousPreviousPlatform.GameObject != null && !HasPlayerOnOrAroundSquare(number - 2))
+        if (platform.GameObject == null)
         {
-            previousPreviousPlatform.GameObject.transform.DOComplete();
-            previousPreviousPlatform.GameObject.transform.DOMoveY(SpawnHeight, CreationDuration);
-            Destroy(previousPreviousPlatform.GameObject, CreationDuration + 0.1f);
-            Platforms.Remove(previousPreviousPlatform);
+            return;
         }
 
-        if (previousPlatform.GameObject != null && !HasPlayerOnSquare(number - 1))
-        {
-            previousPlatform.GameObject.transform.DOComplete();
-            previousPlatform.GameObject.transform.DOMoveY(NeighborHeight, CreationDuration);
-        }
+        Platforms.Remove(platform);
+        Destroy(platform.GameObject);
+    }
 
-        if (nextPlatform.GameObject == null)
+    private int DistanceFromPlayer(int number)
+    {
+        return Players.Min(p => Math.Abs(p.PlayerStat.CurrentSquare - number));
+    }
+
+
+    public void EnablePlatform(int number, float duration)
+    {
+        for (int i = 0; i < HeightPoints.Count; i++)
         {
-            nextPlatform = new PlatformData
+            if (i == 0) // player's platform
             {
-                Number = number + 1,
-                GameObject = Instantiate(Platform, new Vector3(number * PlatformSpacing, SpawnHeight, 0f), Quaternion.identity, transform)
-            };
-            nextPlatform.GameObject.GetComponentInChildren<TMP_Text>().text = (number + 1).ToString();
-            Platforms.Add(nextPlatform);
-            nextPlatform.GameObject.transform.DOMoveY(NeighborHeight, CreationDuration);
+                PlatformData platform = Platforms.Find(p => p.Number == number);
+                platform.SetHeight(HeightPoints[0], duration);
+
+                continue;
+            }
+
+            int previousNumber = number - i;
+            int nextNumber = number + i;
+
+            PlatformData previousPlatform = Platforms.Find(p => p.Number == previousNumber);
+            PlatformData nextPlatform = Platforms.Find(p => p.Number == nextNumber);
+
+            if (previousPlatform.GameObject != null)
+            {
+                previousPlatform.SetHeight(HeightPoints[DistanceFromPlayer(previousNumber)], duration);
+            }
+
+            if (nextPlatform.GameObject == null)
+            {
+                CreatePlatform(nextNumber, HeightPoints[i]);
+            }
+            else
+            {
+                nextPlatform.SetHeight(HeightPoints[DistanceFromPlayer(nextNumber)], duration);
+            }
         }
 
-        platform.GameObject.transform.DOComplete();
-        platform.GameObject.transform.DOMoveY(TargetHeight, CreationDuration);
-
+        int outOfRangePlatformNumber = number - HeightPoints.Count;
+        if (DistanceFromPlayer(outOfRangePlatformNumber) >= HeightPoints.Count)
+        {
+            DestroyPlatform(outOfRangePlatformNumber);
+        }
     }
 }

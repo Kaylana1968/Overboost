@@ -9,7 +9,7 @@ public class Stat
     private readonly List<float> _speedMultipliers = new();
     private int _additionnalSpeed = 0;
 
-    public int CurrentSquare = 1;
+    public int CurrentSquare = 0;
     public int TurnCount = 3;
     public int Speed
     {
