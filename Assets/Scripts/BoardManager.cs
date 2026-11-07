@@ -60,8 +60,8 @@ public class BoardManager : MonoBehaviour
                 transform
             )
         };
-
-        platform.GameObject.GetComponentInChildren<TMP_Text>().SetText((number + 1).ToString());
+        string text = (number + 1).ToString();
+        platform.GameObject.GetComponentInChildren<TMP_Text>().SetText(text);
         Platforms.Add(platform);
     }
 
