@@ -46,8 +46,6 @@ public class PlayerController : MonoBehaviour
 
             yield return new WaitForSeconds(duration);
 
-            print(PlayerStat.CurrentSquare);
-
             if (PlayerStat.CurrentSquare == GameManager.Instance.FinishSquare)
             {
                 GameManager.Instance.OnFinishReached();

@@ -7,7 +7,7 @@ public class TurnManager : MonoBehaviour
 {
     public static TurnManager Instance;
 
-    public int _currentTurn { get; private set; }
+    private int _currentTurn;
     private bool _canMove;
     private readonly List<MoveType> moves = new();
     private bool _isMoving;
@@ -32,6 +32,12 @@ public class TurnManager : MonoBehaviour
             _canMove = true;
             _isMoving = false;
             moves.Clear();
+        });
+
+        OnStartTurn.AddListener((player) =>
+        {
+           GameUIManager.Instance.UpdateMoveText(string.Format("{0} / {1}", _currentTurn, GameManager.Instance.ActivePlayer.PlayerStat.TurnCount)); 
+           GameUIManager.Instance.UpdateSpeedText(GameManager.Instance.ActivePlayer.PlayerStat.Speed.ToString());
         });
 
         OnEndTurn.AddListener((player) =>
