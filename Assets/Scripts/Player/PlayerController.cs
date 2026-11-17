@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
@@ -9,9 +10,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float JumpDuration;
 
-    private Vector3 _initialPosition;
-
     public Stat PlayerStat;
+
+    private Vector3 _initialPosition;
 
 
     void Start()
@@ -44,8 +45,16 @@ public class PlayerController : MonoBehaviour
             transform.DOJump(targetPosition, JumpPower, 1, duration);
 
             yield return new WaitForSeconds(duration);
+
+            print(PlayerStat.CurrentSquare);
+
+            if (PlayerStat.CurrentSquare == GameManager.Instance.FinishSquare)
+            {
+                GameManager.Instance.OnFinishReached();
+                yield break;
+            }
         }
 
-        GameManager.Instance.OnMovementEnded();
+        TurnManager.Instance.OnMovementEnded();
     }
 }

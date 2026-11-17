@@ -1,160 +1,67 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.InputSystem;
 
-public enum MoveType
-{
-    Walk,
-    Wait
-}
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+    public PlayerController ActivePlayer { get; private set; }
+    public int FinishSquare;
 
     [SerializeField]
     private List<PlayerController> Players;
-    [SerializeField]
-    private Canvas BoostScreen;
-    [SerializeField]
-    TMP_Text MoveText;
-    [SerializeField]
-    TMP_Text SpeedText;
 
     public UnityEvent<PlayerController> OnStartRound;
     public UnityEvent<PlayerController> OnEndRound;
-    public UnityEvent<PlayerController> OnStartTurn;
-    public UnityEvent<PlayerController> OnEndTurn;
-
-    private PlayerController _activePlayer;
-    private int _currentTurn;
-    private bool _canMove;
-    private readonly List<MoveType> moves = new();
-    private bool _isMoving;
-    private int _currentMove;
 
     void Awake()
     {
         Instance = this;
         OnStartRound = new();
         OnEndRound = new();
-        OnStartTurn = new();
-        OnEndTurn = new();
     }
 
     void Start()
     {
-        _activePlayer = Players[0];
-
         OnStartRound.AddListener((player) =>
         {
-            _currentTurn = 0;
-            _currentMove = 0;
-            _canMove = true;
-            moves.Clear();
-            UpdateMoveText();
-            UpdateSpeedText();
+            ActivePlayer = player;
         });
 
-        OnStartTurn.AddListener((player) =>
-        {
-            UpdateSpeedText();
-        });
-
-        OnStartRound.Invoke(_activePlayer);
-    }
-
-    private void CheckCanMove()
-    {
-        if (_currentTurn == _activePlayer.PlayerStat.TurnCount)
-        {
-            _canMove = false;
-        }
-    }
-
-    public void OnWalk(InputValue ctx)
-    {
-        if (!_canMove) return;
-
-        moves.Add(MoveType.Walk);
-        IncrementTurn();
-
-        if (!_isMoving)
-        {
-            MakeMove(MoveType.Walk);
-        }
-    }
-
-    public void OnWait(InputValue ctx)
-    {
-        if (!_canMove) return;
-
-        moves.Add(MoveType.Wait);
-        IncrementTurn();
-
-        if (!_isMoving)
-        {
-            MakeMove(MoveType.Wait);
-        }
-    }
-
-    public void OnMovementEnded()
-    {
-        OnEndTurn.Invoke(_activePlayer);
-        _isMoving = false;
-        _currentMove++;
-
-        if (!_canMove && _currentMove == moves.Count)
-        {
-            OnEndRound.Invoke(_activePlayer);
-            return;
-        }
-
-        OnStartTurn.Invoke(_activePlayer);
-        UpdateSpeedText();
-
-        if (_currentMove < moves.Count)
-        {
-            MakeMove(moves[_currentMove]);
-        }
+        OnStartRound.Invoke(Players[0]);
     }
 
     public void GoOnNextRound()
     {
-        _activePlayer = Players[0] == _activePlayer ? Players[1] : Players[0];
-        OnStartRound.Invoke(_activePlayer);
+        OnStartRound.Invoke(Players[0] == ActivePlayer ? Players[1] : Players[0]);
     }
 
-    void IncrementTurn()
+    public void OnFinishReached()
     {
-        _currentTurn++;
-        UpdateMoveText();
-        CheckCanMove();
-    }
-
-    void MakeMove(MoveType move)
-    {
-        _isMoving = true;
-
-        if (move == MoveType.Walk)
+        if (ActivePlayer != Players[1])
         {
-            _activePlayer.Walk();
+            GoOnNextRound();
+            return;
         }
-        else if (move == MoveType.Wait)
+
+        bool hasPlayer1Finished = Players[0].PlayerStat.CurrentSquare >= FinishSquare;
+        bool hasPlayer2Finished = Players[1].PlayerStat.CurrentSquare >= FinishSquare;
+
+        if (hasPlayer1Finished)
         {
-            _activePlayer.Wait();
+            if (hasPlayer2Finished)
+            {
+                EndScreenManager.Instance.ToggleWinner(0);
+            }
+            else
+            {
+                EndScreenManager.Instance.ToggleWinner(1);
+            }
         }
-    }
-
-    void UpdateMoveText()
-    {
-        MoveText.text = string.Format("Move : {0} / {1}", _currentTurn, _activePlayer.PlayerStat.TurnCount);
-    }
-
-    void UpdateSpeedText()
-    {
-        SpeedText.text = string.Format("Speed : {0}", _activePlayer.PlayerStat.Speed);
+        else if (hasPlayer2Finished)
+        {
+            EndScreenManager.Instance.ToggleWinner(2);
+        }
     }
 }
