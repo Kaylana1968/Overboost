@@ -5,26 +5,19 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField]
     private float Offset;
-
     [SerializeField]
     private float Smoothing;
 
-    [SerializeField]
-    private List<PlayerController> Players;
-
-    private Transform ActivePlayer;
+    private Transform _activePlayer;
 
     void Start()
     {
-        foreach (PlayerController player in Players)
-        {
-            player.OnStartRound.AddListener(() => ActivePlayer = player.transform);
-        }
+        GameManager.Instance.OnStartRound.AddListener((player) => _activePlayer = player.transform);
     }
 
     void Update()
     {
-        Vector3 targetPosition = new(ActivePlayer.position.x + Offset, transform.position.y, transform.position.z);
+        Vector3 targetPosition = new(_activePlayer.position.x + Offset, transform.position.y, transform.position.z);
         transform.position = Vector3.Lerp(transform.position, targetPosition, Smoothing);
     }
 }

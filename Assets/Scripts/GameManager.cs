@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
@@ -10,76 +12,143 @@ public class GameManager : MonoBehaviour
     private List<PlayerController> Players;
     [SerializeField]
     private Canvas BoostScreen;
+    [SerializeField]
+    TMP_Text MoveText;
+    [SerializeField]
+    TMP_Text SpeedText;
 
-    private int _activePlayerIndex;
+    public UnityEvent<PlayerController> OnStartRound;
+    public UnityEvent<PlayerController> OnEndRound;
+    public UnityEvent<PlayerController> OnStartTurn;
+    public UnityEvent<PlayerController> OnEndTurn;
+
+    private PlayerController _activePlayer;
     private int _currentTurn;
-    private int _currentEndTurn;
     private bool _canMove;
+    private readonly List<bool> moves = new(); // true = Walk; false = Wait
+    private bool _isMoving;
+    private int _currentMove;
 
     void Awake()
     {
         Instance = this;
+        OnStartRound = new();
+        OnEndRound = new();
+        OnStartTurn = new();
+        OnEndTurn = new();
     }
 
     void Start()
     {
-        _activePlayerIndex = 0;
-        PlayerController activePlayer = Players[_activePlayerIndex];
+        _activePlayer = Players[0];
 
-        foreach (PlayerController player in Players)
+        OnStartRound.AddListener((player) =>
         {
-            player.OnStartRound.AddListener(() =>
-            {
-                _currentTurn = 1;
-                _currentEndTurn = 1;
-                _canMove = true;
-            });
-            player.OnEndTurn.AddListener(() =>
-            {
-                if (_currentEndTurn == player.PlayerStat.TurnCount)
-                {
-                    player.OnEndRound.Invoke();
-                    BoostScreen.enabled = true;
-                }
-                else
-                {
-                    _currentEndTurn++;
-                }
-            });
-        }
-        activePlayer.OnStartRound.Invoke();
+            _currentTurn = 0;
+            _currentMove = 0;
+            _canMove = true;
+            moves.Clear();
+            UpdateMoveText();
+            UpdateSpeedText();
+        });
+
+        OnStartTurn.AddListener((player) =>
+        {
+            UpdateSpeedText();
+        });
+
+        OnStartRound.Invoke(_activePlayer);
     }
 
     private void CheckCanMove()
     {
-        if (_currentTurn <= Players[_activePlayerIndex].PlayerStat.TurnCount)
+        if (_currentTurn == _activePlayer.PlayerStat.TurnCount)
         {
-            return;
+            _canMove = false;
         }
-
-        _canMove = false;
-
     }
 
     public void OnWalk(InputValue ctx)
     {
         if (!_canMove) return;
-        Players[_activePlayerIndex].Walk();
-        _currentTurn++;
-        CheckCanMove();
+
+        moves.Add(true);
+        IncrementTurn();
+
+        if (!_isMoving)
+        {
+            MakeMove(true);
+        }
     }
 
     public void OnWait(InputValue ctx)
     {
         if (!_canMove) return;
-        Players[_activePlayerIndex].Wait();
-        _currentTurn++;
-        CheckCanMove();
+
+        moves.Add(false);
+        IncrementTurn();
+
+        if (!_isMoving)
+        {
+            MakeMove(false);
+        }
+    }
+
+    public void OnMovementEnded()
+    {
+        OnEndTurn.Invoke(_activePlayer);
+        _isMoving = false;
+        _currentMove++;
+
+        if (!_canMove && _currentMove == moves.Count)
+        {
+            OnEndRound.Invoke(_activePlayer);
+            return;
+        }
+
+        OnStartTurn.Invoke(_activePlayer);
+        UpdateSpeedText();
+
+        if (_currentMove < moves.Count)
+        {
+            MakeMove(moves[_currentMove]);
+        }
     }
 
     public void GoOnNextRound()
     {
-        _activePlayerIndex = (_activePlayerIndex + 1) % Players.Count;
-        Players[_activePlayerIndex].OnStartRound.Invoke();
+        _activePlayer = Players[0] == _activePlayer ? Players[1] : Players[0];
+        OnStartRound.Invoke(_activePlayer);
+    }
+
+    void IncrementTurn()
+    {
+        _currentTurn++;
+        UpdateMoveText();
+        CheckCanMove();
+    }
+
+    void MakeMove(bool move)
+    {
+        _isMoving = true;
+
+        if (move)
+        {
+            _activePlayer.Walk();
+        }
+        else
+        {
+            _activePlayer.Wait();
+        }
+    }
+
+    void UpdateMoveText()
+    {
+        MoveText.text = string.Format("Move : {0} / {1}", _currentTurn, _activePlayer.PlayerStat.TurnCount);
+    }
+
+    void UpdateSpeedText()
+    {
+        SpeedText.text = string.Format("Speed : {0}", _activePlayer.PlayerStat.Speed);
     }
 }

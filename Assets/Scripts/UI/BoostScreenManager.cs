@@ -8,18 +8,11 @@ public class BoostScreenManager : MonoBehaviour
     [SerializeField]
     private List<CardManager> Cards;
     [SerializeField]
-    private List<PlayerController> Players;
-
-    private Canvas _canvas;
+    private Canvas Canvas;
 
     void Start()
     {
-        _canvas = GetComponent<Canvas>();
-
-        foreach (PlayerController player in Players)
-        {
-            player.OnEndRound.AddListener(() => GenerateBoostFor(player.gameObject));
-        }
+        GameManager.Instance.OnEndRound.AddListener((player) => GenerateBoostFor(player.gameObject));
     }
 
     List<Boost> GetThreeRandomBoosts()
@@ -38,12 +31,12 @@ public class BoostScreenManager : MonoBehaviour
 
     void GenerateBoostFor(GameObject player)
     {
-        _canvas.enabled = true;
+        Canvas.enabled = true;
         
         List<Boost> selectedBoosts = GetThreeRandomBoosts();
         for (int i = 0; i < Cards.Count; i++)
         {
-            Cards[i].SetCard(selectedBoosts[i], player, _canvas);
+            Cards[i].SetCard(selectedBoosts[i], player, Canvas);
         }
     }
 }

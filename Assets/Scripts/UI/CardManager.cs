@@ -5,26 +5,21 @@ using UnityEngine.UI;
 public class CardManager : MonoBehaviour
 {
     [SerializeField]
-    private RawImage image;
+    private RawImage Image;
     [SerializeField]
-    private TMP_Text title;
+    private TMP_Text Title;
     [SerializeField]
-    private TMP_Text description;
-
-    private Button _button;
-
-    void Start()
-    {
-        _button = GetComponent<Button>();
-    }
+    private TMP_Text Description;
+    [SerializeField]
+    private Button Button;
 
     public void SetCard(Boost boost, GameObject player, Canvas canvas)
     {
-        image.texture = boost.Image;
-        title.text = boost.BoostName;
-        description.text = boost.Description;
-        _button.onClick.RemoveAllListeners();
-        _button.onClick.AddListener(() =>
+        Image.texture = boost.Image;
+        Title.text = boost.BoostName;
+        Description.text = boost.Description;
+        Button.onClick.RemoveAllListeners();
+        Button.onClick.AddListener(() =>
         {
             canvas.enabled = false;
             player.AddComponent(boost.Script.GetType());
