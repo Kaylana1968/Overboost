@@ -4,6 +4,12 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
+public enum MoveType
+{
+    Walk,
+    Wait
+}
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
@@ -25,7 +31,7 @@ public class GameManager : MonoBehaviour
     private PlayerController _activePlayer;
     private int _currentTurn;
     private bool _canMove;
-    private readonly List<bool> moves = new(); // true = Walk; false = Wait
+    private readonly List<MoveType> moves = new();
     private bool _isMoving;
     private int _currentMove;
 
@@ -72,12 +78,12 @@ public class GameManager : MonoBehaviour
     {
         if (!_canMove) return;
 
-        moves.Add(true);
+        moves.Add(MoveType.Walk);
         IncrementTurn();
 
         if (!_isMoving)
         {
-            MakeMove(true);
+            MakeMove(MoveType.Walk);
         }
     }
 
@@ -85,12 +91,12 @@ public class GameManager : MonoBehaviour
     {
         if (!_canMove) return;
 
-        moves.Add(false);
+        moves.Add(MoveType.Wait);
         IncrementTurn();
 
         if (!_isMoving)
         {
-            MakeMove(false);
+            MakeMove(MoveType.Wait);
         }
     }
 
@@ -128,15 +134,15 @@ public class GameManager : MonoBehaviour
         CheckCanMove();
     }
 
-    void MakeMove(bool move)
+    void MakeMove(MoveType move)
     {
         _isMoving = true;
 
-        if (move)
+        if (move == MoveType.Walk)
         {
             _activePlayer.Walk();
         }
-        else
+        else if (move == MoveType.Wait)
         {
             _activePlayer.Wait();
         }
