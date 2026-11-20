@@ -8,9 +8,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
     public PlayerController ActivePlayer { get; private set; }
     public int FinishSquare;
-
-    [SerializeField]
-    private List<PlayerController> Players;
+    public List<PlayerController> Players;
 
     public UnityEvent<PlayerController> OnStartRound;
     public UnityEvent<PlayerController> OnEndRound;

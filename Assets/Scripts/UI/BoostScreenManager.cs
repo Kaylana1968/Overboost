@@ -3,12 +3,25 @@ using UnityEngine;
 
 public class BoostScreenManager : MonoBehaviour
 {
+    public static BoostScreenManager Instance;
+
     [SerializeField]
-    private List<Boost> Boosts;
+    List<Boost> Boosts;
     [SerializeField]
-    private List<CardManager> Cards;
+    List<CardManager> Cards;
     [SerializeField]
-    private Canvas Canvas;
+    Canvas Canvas;
+    [SerializeField]
+    PanelManager Panel;
+
+    GameObject player1;
+    Boost selectedBoost1;
+    Boost selectedBoost2;
+
+    void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
@@ -17,7 +30,7 @@ public class BoostScreenManager : MonoBehaviour
 
     List<Boost> GetThreeRandomBoosts()
     {
-        List<Boost>tempList = new(Boosts);
+        List<Boost> tempList = new(Boosts);
 
         // shuffle
         for (int i = 0; i < tempList.Count; i++)
@@ -32,11 +45,37 @@ public class BoostScreenManager : MonoBehaviour
     void GenerateBoostFor(GameObject player)
     {
         Canvas.enabled = true;
-        
-        List<Boost> selectedBoosts = GetThreeRandomBoosts();
+        player1 = player;
+        selectedBoost1 = null;
+        selectedBoost2 = null;
+
+        List<Boost> playerChoices = GetThreeRandomBoosts();
+        List<Boost> opponentChoices = GetThreeRandomBoosts();
         for (int i = 0; i < Cards.Count; i++)
         {
-            Cards[i].SetCard(selectedBoosts[i], player, Canvas);
+            Cards[i].SetCard(playerChoices[i], opponentChoices[i]);
         }
+    }
+
+    public void SetBoosts(Boost boost1, Boost boost2)
+    {
+        selectedBoost1 = boost1;
+        selectedBoost2 = boost2;
+        Panel.SetBoosts(boost1, boost2);
+    }
+
+    public void ValidateBoosts()
+    {
+        if (!selectedBoost1 || !selectedBoost2)
+        {
+            return;
+        }
+
+        GameObject player2 = GameManager.Instance.Players.Find(player => player.gameObject != player1).gameObject;
+        player1.AddComponent(selectedBoost1.Script.GetType());
+        player2.AddComponent(selectedBoost2.Script.GetType());
+        Canvas.enabled = false;
+
+        GameManager.Instance.GoOnNextRound();
     }
 }

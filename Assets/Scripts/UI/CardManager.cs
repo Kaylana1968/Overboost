@@ -1,29 +1,23 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CardManager : MonoBehaviour
 {
     [SerializeField]
-    private RawImage Image;
+    Button Button;
     [SerializeField]
-    private TMP_Text Title;
+    RawImage Image1;
     [SerializeField]
-    private TMP_Text Description;
-    [SerializeField]
-    private Button Button;
+    RawImage Image2;
 
-    public void SetCard(Boost boost, GameObject player, Canvas canvas)
+    public void SetCard(Boost boost1, Boost boost2)
     {
-        Image.texture = boost.Image;
-        Title.text = boost.BoostName;
-        Description.text = boost.Description;
+        Image1.texture = boost1.Image;
+        Image2.texture = boost2.Image;
         Button.onClick.RemoveAllListeners();
         Button.onClick.AddListener(() =>
         {
-            canvas.enabled = false;
-            player.AddComponent(boost.Script.GetType());
-            GameManager.Instance.GoOnNextRound();
+            BoostScreenManager.Instance.SetBoosts(boost1, boost2);
         });
     }
 }
