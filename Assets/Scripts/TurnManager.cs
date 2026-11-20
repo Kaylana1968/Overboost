@@ -32,12 +32,12 @@ public class TurnManager : MonoBehaviour
             _canMove = true;
             _isMoving = false;
             moves.Clear();
+            UpdateUI();
         });
 
         OnStartTurn.AddListener((player) =>
         {
-           GameUIManager.Instance.UpdateMoveText(string.Format("{0} / {1}", _currentTurn, GameManager.Instance.ActivePlayer.PlayerStat.TurnCount)); 
-           GameUIManager.Instance.UpdateSpeedText(GameManager.Instance.ActivePlayer.PlayerStat.Speed.ToString());
+            UpdateUI();
         });
 
         OnEndTurn.AddListener((player) =>
@@ -79,7 +79,7 @@ public class TurnManager : MonoBehaviour
             return;
         }
 
-        moves.Add(MoveType.Wait);
+        moves.Add(move);
         IncrementTurn();
 
         if (_isMoving)
@@ -87,21 +87,17 @@ public class TurnManager : MonoBehaviour
             return;
         }
 
-        MakeMove(move);
-    }
-
-    void CheckCanMove()
-    {
-        if (_currentTurn == GameManager.Instance.ActivePlayer.PlayerStat.TurnCount)
-        {
-            _canMove = false;
-        }
+        MakeNextMove();
     }
 
     void IncrementTurn()
     {
         _currentTurn++;
-        CheckCanMove();
+        
+        if (_currentTurn == GameManager.Instance.ActivePlayer.PlayerStat.TurnCount)
+        {
+            _canMove = false;
+        }
     }
 
     void MakeNextMove()
@@ -126,5 +122,11 @@ public class TurnManager : MonoBehaviour
         {
             GameManager.Instance.ActivePlayer.Wait();
         }
+    }
+
+    void UpdateUI()
+    {
+        GameUIManager.Instance.UpdateMoveText(string.Format("{0} / {1}", _currentTurn, GameManager.Instance.ActivePlayer.PlayerStat.TurnCount));
+        GameUIManager.Instance.UpdateSpeedText(GameManager.Instance.ActivePlayer.PlayerStat.Speed.ToString());
     }
 }

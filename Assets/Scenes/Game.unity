@@ -2917,6 +2917,7 @@ GameObject:
   - component: {fileID: 1316378994}
   - component: {fileID: 1316378993}
   - component: {fileID: 1316378991}
+  - component: {fileID: 1316378995}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -2985,6 +2986,20 @@ RectTransform:
   m_AnchoredPosition: {x: 960, y: -540}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1316378995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1316378989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 099764e02bebd7d4086ad2f7ebbf9f5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameUIManager
+  MoveText: {fileID: 157616245}
+  SpeedText: {fileID: 2115079418}
 --- !u!1 &1761769771
 GameObject:
   m_ObjectHideFlags: 0
@@ -3420,6 +3435,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2007891532}
   - component: {fileID: 2007891531}
+  - component: {fileID: 2007891534}
   - component: {fileID: 2007891533}
   m_Layer: 0
   m_Name: GameManager
@@ -3440,22 +3456,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38279cdbafa85e94dbb28a76a985a91a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  FinishSquare: 10
+  FinishSquare: 49
   Players:
   - {fileID: 633330140}
   - {fileID: 583715378}
-  MoveText: {fileID: 157616245}
-  SpeedText: {fileID: 2115079418}
   OnStartRound:
     m_PersistentCalls:
       m_Calls: []
   OnEndRound:
-    m_PersistentCalls:
-      m_Calls: []
-  OnStartTurn:
-    m_PersistentCalls:
-      m_Calls: []
-  OnEndTurn:
     m_PersistentCalls:
       m_Calls: []
 --- !u!4 &2007891532
@@ -3503,6 +3511,24 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &2007891534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2007891530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ef89de21d0554842a8d9abfa7b614d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TurnManager
+  OnStartTurn:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEndTurn:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2091677958
 GameObject:
   m_ObjectHideFlags: 0

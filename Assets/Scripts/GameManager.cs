@@ -20,15 +20,15 @@ public class GameManager : MonoBehaviour
         Instance = this;
         OnStartRound = new();
         OnEndRound = new();
-    }
 
-    void Start()
-    {
         OnStartRound.AddListener((player) =>
         {
             ActivePlayer = player;
         });
+    }
 
+    void Start()
+    {
         OnStartRound.Invoke(Players[0]);
     }
 
